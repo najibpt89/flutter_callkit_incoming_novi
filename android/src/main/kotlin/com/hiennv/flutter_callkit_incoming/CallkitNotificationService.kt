@@ -86,12 +86,21 @@ class CallkitNotificationService : Service() {
 
         val callkitNotification =
             getCallkitNotificationManager()?.getOnGoingCallNotification(bundle, false)
+        val typeCall = data.getInt(CallkitConstants.EXTRA_CALLKIT_TYPE, -1)
         if (callkitNotification != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                var serviceType = ServiceInfo.FOREGROUND_SERVICE_TYPE_PHONE_CALL
+                if (typeCall > 0){
+                    serviceType = serviceType or ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE or ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA
+                }
+                else {
+                    serviceType = serviceType or ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
+                }
+                
                 startForeground(
                     callkitNotification.id,
                     callkitNotification.notification,
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_PHONE_CALL
+                    serviceType
                 )
             } else {
                 startForeground(callkitNotification.id, callkitNotification.notification)
