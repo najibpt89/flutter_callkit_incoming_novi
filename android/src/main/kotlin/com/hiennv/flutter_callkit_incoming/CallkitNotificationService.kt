@@ -86,7 +86,7 @@ class CallkitNotificationService : Service() {
 
         val callkitNotification =
             getCallkitNotificationManager()?.getOnGoingCallNotification(bundle, false)
-        val typeCall = data.getInt(CallkitConstants.EXTRA_CALLKIT_TYPE, -1)
+        val typeCall = bundle.getInt(CallkitConstants.EXTRA_CALLKIT_TYPE, -1)
         if (callkitNotification != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 var serviceType = ServiceInfo.FOREGROUND_SERVICE_TYPE_PHONE_CALL
