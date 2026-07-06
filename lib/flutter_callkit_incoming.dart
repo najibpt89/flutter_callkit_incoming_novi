@@ -177,6 +177,12 @@ class FlutterCallkitIncoming {
     await _channel.invokeMethod("callConnected", {'id': id});
   }
 
+  // Change Audio Route
+  Future<void> setAudioRoute(String id, String route) async {
+    await _channel.invokeMethod("setAudioRoute", {'id': id, 'route': route});
+  }
+
+
   /// End all calls.
   static Future<void> endAllCalls() async {
     await _channel.invokeMethod("endAllCalls");
