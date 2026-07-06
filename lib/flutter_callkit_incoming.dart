@@ -178,7 +178,7 @@ class FlutterCallkitIncoming {
   }
 
   // Change Audio Route
-  Future<void> setAudioRoute(String id, String route) async {
+  static Future<void> setAudioRoute(String id, String route) async {
     await _channel.invokeMethod("setAudioRoute", {'id': id, 'route': route});
   }
 
