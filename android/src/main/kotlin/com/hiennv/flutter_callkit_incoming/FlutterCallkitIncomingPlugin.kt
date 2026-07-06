@@ -439,8 +439,31 @@ class FlutterCallkitIncomingPlugin : FlutterPlugin, MethodCallHandler, ActivityA
                 }
 
                 "setAudioRoute" -> {
-                    result.success(true)
+                    val id = call.argument<String>("id")
+                    val route = call.argument<String>("route") // "speaker" | "earpiece" | "bluetooth" | "wired"
+                    val connection = CallkitConnection.find(id ?: "")
+                    if (connection == null) {
+                        result.error("NO_CONNECTION", "No active connection for id=$id", null)
+                        return
+                    }
+                    val routeInt = when (route) {
+                        "speaker" -> android.telecom.CallAudioState.ROUTE_SPEAKER
+                        "earpiece" -> android.telecom.CallAudioState.ROUTE_EARPIECE
+                        "bluetooth" -> android.telecom.CallAudioState.ROUTE_BLUETOOTH
+                        "wired" -> android.telecom.CallAudioState.ROUTE_WIRED_HEADSET
+                        else -> android.telecom.CallAudioState.ROUTE_EARPIECE
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                        connection.state == android.telecom.Connection.STATE_ACTIVE
+                    ) {
+                        connection.setAudioRoute(routeInt)
+                        result.success(true)
+                    } else {
+                        Log.w(TAG, "setAudioRoute: connection not active (state=${connection.state}), skipping")
+                        result.success(false)
+                    }
                 }
+
             }
         } catch (error: Exception) {
             result.error("error", error.message, "")
