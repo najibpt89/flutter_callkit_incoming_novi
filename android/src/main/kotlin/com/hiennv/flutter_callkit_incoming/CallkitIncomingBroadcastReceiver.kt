@@ -181,6 +181,7 @@ class CallkitIncomingBroadcastReceiver : BroadcastReceiver() {
                     registerTelecomIncomingCall(context, data)
                     val incomingData = Data.fromBundle(data)
                     if (incomingData.isFullScreen) {
+                        addCall(context, incomingData)
                         val intent = CallkitIncomingActivity.getIntent(context, data)
                         context.startActivity(intent)
                     } else {
